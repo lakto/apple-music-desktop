@@ -1,8 +1,10 @@
+const path = require('path');
+
 module.exports = {
   packagerConfig: {
     asar: true,
     executableName: 'youtube-desktop',
-    icon: __dirname + '/images/YouTube'
+    icon: './images/icon',
   },
   rebuildConfig: {},
   makers: [
@@ -10,7 +12,7 @@ module.exports = {
       name: '@electron-forge/maker-squirrel',
       config: {
         iconUrl: 'https://raw.githubusercontent.com/mikepruett3/youtube-desktop/main/images/YouTube.ico',
-        setupIcon: './images/YouTube.ico'
+        setupIcon: './images/icon.ico'
       },
     },
     {

@@ -5,6 +5,7 @@ if (require('electron-squirrel-startup')) return;
 
 const { app, shell, session, BrowserWindow, Menu, Tray, nativeImage, dialog } = require('electron')
 const { getHA, setHA } = require('./settings.js');
+const path = require('path');
 
 // Disable Hardware Acceleration
 // https://www.electronjs.org/docs/latest/tutorial/offscreen-rendering
@@ -17,7 +18,7 @@ createWindow = () => {
         width: 1280,
         height: 720,
         title: 'YouTube Desktop',
-        icon: __dirname + '/images/YouTube.ico',
+        icon: './images/icon',
         autoHideMenuBar: true,
         webPreferences: {
             webSecurity: true,
@@ -50,7 +51,7 @@ createWindow = () => {
     });
 
     let tray = null
-    const icon = nativeImage.createFromPath(__dirname + '/images/YouTube.ico')
+    const icon = nativeImage.createFromPath('./images/icon')
     tray = new Tray(icon)
 
     const contextMenu = Menu.buildFromTemplate([
