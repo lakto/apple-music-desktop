@@ -43,5 +43,6 @@
     "electron-prompt": "^1.7.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0"
-  }
+  },
+  "packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72"
 }
