@@ -12,7 +12,7 @@ module.exports = {
     {
       'name': '@electron-forge/maker-squirrel',
       'config': {
-        'iconUrl': 'https://raw.githubusercontent.com/mikepruett3/youtube-desktop/main/images/YouTube.ico',
+        'iconUrl': 'https://raw.githubusercontent.com/lakto/youtube-desktop/refs/heads/main/images/YouTube.ico',
         'setupIcon': './images/icon.ico'
       },
     },
@@ -35,7 +35,7 @@ module.exports = {
       'name': '@electron-forge/publisher-github',
       'config': {
         'repository': {
-          'owner': 'mikepruett3',
+          'owner': 'lakto',
           'name': 'youtube-desktop'
         }
       }
