@@ -7,10 +7,51 @@ const { app, shell, session, BrowserWindow, Menu, Tray, nativeImage, dialog } = 
 const { getHA, setHA } = require('./settings.js');
 const path = require('path');
 
+const domain = '.apple.com';
+const url = `https://beta.music${domain}`;
+
 // Disable Hardware Acceleration
 // https://www.electronjs.org/docs/latest/tutorial/offscreen-rendering
 if (!getHA()) {
     app.disableHardwareAcceleration()
+}
+
+// Function to set multiple cookies
+function setCookies() {
+    // Unix timestamp for one month from now
+    const oneMonthFromNow = Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60); 
+    const cookies = [
+        {
+            url: url,
+            name: 'POD',
+            value: 'ch~de',
+            domain: domain,
+            expirationDate: oneMonthFromNow
+        },
+        {
+            url: url,
+            name: 'dslang',
+            value: 'CH-DE',
+            domain: domain,
+            expirationDate: oneMonthFromNow
+        },
+        {
+            url: url,
+            name: 'site',
+            value: 'CHE',
+            domain: domain,
+            expirationDate: oneMonthFromNow
+        }
+    ];
+
+    cookies.forEach(cookie => {
+        session.defaultSession.cookies.set(cookie)
+            .then(() => {
+                console.log(`Cookie ${cookie.name} set successfully`);
+            }, (error) => {
+                console.error(`Error setting cookie ${cookie.name}:`, error);
+            });
+    });
 }
 
 createWindow = () => {
@@ -21,98 +62,71 @@ createWindow = () => {
         icon: './images/icon',
         autoHideMenuBar: true,
         webPreferences: {
-            webSecurity: true,
+            nodeIntegration: false,
             contextIsolation: true,
+            webSecurity: true,
             webviewTag: true,
-            nodeIntegration: true,
             nativeWindowOpen: true
         }
     });
 
-    win.loadURL(`https://music.apple.com/ch/home`);
+    // Set custom user agent
+    win.webContents.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.70 Safari/537.36');
 
-    // Create a Cookie, so that Theater Mode is allways enabled.
-    // https://www.electronjs.org/docs/latest/api/cookies
-    // http://blog.ercanopak.com/how-to-make-theater-mode-the-default-for-youtube/
-    // https://medium.com/swlh/building-an-application-with-electron-js-part-2-e62c23e4eb69
-    const cookie = { url: 'https://music.apple.com', name: 'wide', value: '1' }
-    session.defaultSession.cookies.set(cookie)
-        .then(() => {
-            // success
-        }, (error) => {
-            console.error(error)
-        })
+    // menu template
+    const template = [
+        {
+            label: 'Developer',
+            submenu: [
+                {
+                    role: 'reload'
+                },
+                {
+                    role: 'forcereload'
+                },
+                {
+                    type: 'separator'
+                },
+                {
+                    role: 'toggledevtools'
+                },
+                {
+                    type: 'separator'
+                },
+                {
+                    role: 'close'
+                }
+            ]
+        }
+    ];
 
-    // Open links with External Browser
-    // https://stackoverflow.com/a/67409223
+    const menu = Menu.buildFromTemplate(template)
+    Menu.setApplicationMenu(menu)
+
+    // Open links with external browser
     win.webContents.setWindowOpenHandler(({ url }) => {
-        shell.openExternal(url);
+        require('electron').shell.openExternal(url);
         return { action: 'deny' };
     });
 
-    let tray = null
-    const icon = nativeImage.createFromPath('./images/icon')
-    tray = new Tray(icon)
+    // Load the URL
+    win.loadURL(`${url}/ch/library/all-playlists/`);
 
-    const contextMenu = Menu.buildFromTemplate([
-        {
-            label: 'Hardware Acceleration',
-            type: 'checkbox',
-            checked: getHA(),
-            click({ checked }) {
-                setHA(checked)
-                dialog.showMessageBox(
-                    null,
-                    {
-                        type: 'info',
-                        title: 'info',
-                        message: 'Exiting Applicatiom, as Hardware Acceleration setting has been changed...'
-                    })
-                    .then(result => {
-                      if (result.response === 0) {
-                        app.relaunch();
-                        app.exit()
-                      }
-                    }
-                )
-            }
-        },
-        {
-            label: 'Clear Cache',
-            click: () => {
-                session.defaultSession.clearStorageData()
-                app.relaunch();
-                app.exit();
-            }
-        },
-        {
-            label: 'Reload',
-            click: () => win.reload()
-        },
-        {
-            label: 'Quit',
-            type: 'normal',
-            role: 'quit'
-        }
-    ])
+    // Handle cookies
+    // setCookies();
 
-    tray.setToolTip('Apple Music Desktop')
-    tray.setTitle('Apple Music Desktop')
-    tray.setContextMenu(contextMenu)
 };
 
-app.whenReady().then(() => {
-    createWindow()
-
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow()
-        }
-    })
-})
+app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-        app.quit()
+        app.quit();
     }
-})
+});
+
+app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow();
+    }
+});
