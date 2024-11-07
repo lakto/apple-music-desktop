@@ -17,7 +17,7 @@ createWindow = () => {
     const win = new BrowserWindow({
         width: 1280,
         height: 720,
-        title: 'YouTube Desktop',
+        title: 'Apple Music Desktop',
         icon: './images/icon',
         autoHideMenuBar: true,
         webPreferences: {
@@ -29,13 +29,13 @@ createWindow = () => {
         }
     });
 
-    win.loadURL(`https://www.youtube.com/feed/subscriptions`);
+    win.loadURL(`https://music.apple.com/ch/home`);
 
     // Create a Cookie, so that Theater Mode is allways enabled.
     // https://www.electronjs.org/docs/latest/api/cookies
     // http://blog.ercanopak.com/how-to-make-theater-mode-the-default-for-youtube/
     // https://medium.com/swlh/building-an-application-with-electron-js-part-2-e62c23e4eb69
-    const cookie = { url: 'https://www.youtube.com', name: 'wide', value: '1' }
+    const cookie = { url: 'https://music.apple.com', name: 'wide', value: '1' }
     session.defaultSession.cookies.set(cookie)
         .then(() => {
             // success
@@ -96,8 +96,8 @@ createWindow = () => {
         }
     ])
 
-    tray.setToolTip('YouTube Desktop')
-    tray.setTitle('YouTube Desktop')
+    tray.setToolTip('Apple Music Desktop')
+    tray.setTitle('Apple Music Desktop')
     tray.setContextMenu(contextMenu)
 };
 

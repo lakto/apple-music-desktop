@@ -3,8 +3,8 @@ const path = require('path');
 module.exports = {
   'packagerConfig': {
     'asar': true,
-    'executableName': 'youtube-desktop',
-    'productName': 'YouTube Desktop',
+    'executableName': 'apple-music-desktop',
+    'productName': 'Apple Music Desktop',
     'icon': path.resolve(__dirname, 'images', 'icon'),
   },
   'rebuildConfig': {},
@@ -12,7 +12,7 @@ module.exports = {
     {
       'name': '@electron-forge/maker-squirrel',
       'config': {
-        'iconUrl': 'https://raw.githubusercontent.com/lakto/youtube-desktop/refs/heads/main/images/YouTube.ico',
+        'iconUrl': 'https://raw.githubusercontent.com/lakto/apple-music-desktop/refs/heads/main/images/AppleMusic.ico',
         'setupIcon': './images/icon.ico'
       },
     },
@@ -20,7 +20,7 @@ module.exports = {
       'name': '@electron-forge/maker-deb',
       'config': {
         'options': {
-          'productName': 'YouTube Desktop',
+          'productName': 'Apple Music Desktop',
           'icon': path.resolve(__dirname, 'images', 'icon.png')
         }
       }
@@ -36,7 +36,7 @@ module.exports = {
       'config': {
         'repository': {
           'owner': 'lakto',
-          'name': 'youtube-desktop'
+          'name': 'apple-music-desktop'
         }
       }
     }
